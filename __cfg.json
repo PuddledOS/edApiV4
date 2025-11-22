@@ -1,0 +1,11 @@
+{
+  "json_location" : "/home/dave/.steam/steam/steamapps/compatdata/359320/pfx/drive_c/users/steamuser/Saved Games/Frontier Developments/Elite Dangerous/",
+  "json_test_location" : "/home/dave/Desktop/",
+  "host": "0.0.0.0",
+  "port": 5000,
+  "workers": 3,
+  "debug" : false,
+  "output_directory": "/home/dave/Desktop",
+  "allowed_origins": ["*"],
+  "enable_keyboard_control": true
+}
