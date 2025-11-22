@@ -2,6 +2,8 @@
 
 A FastAPI-based background service for accessing Elite Dangerous game data through a REST API.
 
+** still very much a work in progress **
+
 ## Features
 
 - Real-time game status monitoring
