@@ -17,14 +17,17 @@ def get_json_location(request: Request) -> Path:
     """Get JSON location from app state."""
     return request.app.state.json_location
 
+def read_status_file(request: Request):
+    json_location = get_json_location(request)
+    status_file = json_location / 'Status.json'
+    data = read_json_file(status_file)
+    return data
+
 
 @router.get('/active', response_model=StatusResponse)
 async def get_active(request: Request):
     """Check if Elite Dangerous is currently running."""
-    json_location = get_json_location(request)
-    status_file = json_location / 'Status.json'
-
-    data = read_json_file(status_file)
+    data = read_status_file(request)
     if not data:
         raise HTTPException(status_code=503, detail="Cannot read status file")
 
@@ -38,10 +41,8 @@ async def get_active(request: Request):
 @router.get('/wealth', response_model=BalanceResponse)
 async def get_wealth(request: Request):
     """Get current balance/wealth."""
-    json_location = get_json_location(request)
-    status_file = json_location / 'Status.json'
 
-    data = read_json_file(status_file)
+    data = read_status_file(request)
     if not data:
         raise HTTPException(status_code=503, detail="Cannot read status file")
 
@@ -52,10 +53,7 @@ async def get_wealth(request: Request):
 @router.get('/flags', response_model=FlagsResponse)
 async def get_flags(request: Request):
     """Get current status flags."""
-    json_location = get_json_location(request)
-    status_file = json_location / 'Status.json'
-
-    data = read_json_file(status_file)
+    data = read_status_file(request)
     if not data:
         raise HTTPException(status_code=503, detail="Cannot read status file")
 
@@ -73,10 +71,7 @@ async def get_flags(request: Request):
 @router.get('/screen', response_model=ScreenResponse)
 async def get_screen(request: Request):
     """Get current GUI focus/screen."""
-    json_location = get_json_location(request)
-    status_file = json_location / 'Status.json'
-
-    data = read_json_file(status_file)
+    data = read_status_file(request)
     if not data:
         raise HTTPException(status_code=503, detail="Cannot read status file")
 
@@ -87,10 +82,7 @@ async def get_screen(request: Request):
 @router.get('/pips', response_model=PipsResponse, description="Request parameters should be raw or percent.\nRaw will return a single digit number 0 - 8, percent will return a value between 0 - 100 dependant upon current setting ")
 async def get_pips(request: Request, type: str = Query('percent', regex='^(percent|raw)$', description="Request either percentage value or raw value" ) ):
     """Get power distribution (pips) information."""
-    json_location = get_json_location(request)
-    status_file = json_location / 'Status.json'
-
-    data = read_json_file(status_file)
+    data = read_status_file(request)
     if not data:
         raise HTTPException(status_code=503, detail="Cannot read status file")
 
@@ -114,10 +106,7 @@ async def get_pips(request: Request, type: str = Query('percent', regex='^(perce
 @router.get('/fuel', response_model=FuelResponse)
 async def get_fuel(request: Request):
     """Get fuel information."""
-    json_location = get_json_location(request)
-    status_file = json_location / 'Status.json'
-
-    data = read_json_file(status_file)
+    data = read_status_file(request)
     if not data:
         raise HTTPException(status_code=503, detail="Cannot read status file")
 
@@ -125,7 +114,7 @@ async def get_fuel(request: Request):
     fuel_main = fuel.get('FuelMain', 0)
 
     # Get fuel capacity from journal
-    loadout_event = find_latest_event(json_location, 'Loadout')
+    loadout_event = find_latest_event(get_json_location(request), 'Loadout')
     fuel_capacity = 0
 
     if loadout_event:
@@ -144,10 +133,7 @@ async def get_fuel(request: Request):
 @router.get('/health-detailed', response_model=DetailedHealthResponse)
 async def get_detailed_health(request: Request):
     """Get detailed health information including shields and hull."""
-    json_location = request.app.state.json_location
-    status_file = json_location / 'Status.json'
-
-    data = read_json_file(status_file)
+    data = read_status_file(request)
     if not data:
         raise HTTPException(status_code=503, detail="Cannot read status file")
 

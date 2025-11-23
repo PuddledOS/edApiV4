@@ -70,3 +70,4 @@ def ensure_directory(directory: Path) -> bool:
     except Exception as e:
         logger.error(f"Error creating directory {directory}: {e}")
         return False
+
