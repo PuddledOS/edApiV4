@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pystray import Icon, Menu, MenuItem
 from PIL import Image
 from config import load_config, Config
-from routes import status, cargo, events, construction, control, export, navigation, ships
+from routes import status, cargo, events, construction, control, export, navigation, ships, carrier
 
 # Configure logging
 logging.basicConfig(
@@ -88,6 +88,7 @@ def setup_app(config: Config):
     app.include_router(export.router)
     app.include_router(navigation.router)
     app.include_router(ships.router)
+    app.include_router(carrier.router)
 
     logger.info("Application setup complete")
 
