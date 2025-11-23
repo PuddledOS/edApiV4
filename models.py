@@ -88,3 +88,40 @@ class TaskStatusResponse(BaseModel):
     progress: Optional[str] = None
     error: Optional[str] = None
 
+class LocationResponse(BaseModel):
+    """Response for current location."""
+    StarSystem: str
+    SystemAddress: Optional[int] = None
+    StarPos: list = []
+    Body: Optional[str] = None
+    BodyType: Optional[str] = None
+    Docked: bool = False
+    StationName: Optional[str] = None
+
+class JumpHistoryResponse(BaseModel):
+    system: str
+    timestamp: str
+    jump_dist: Optional[float] = None
+    fuel_used: Optional[float] = None
+
+class DetailedHealthResponse(BaseModel):
+    """Response for detailed health information."""
+    Health: float
+    Shields: float
+    ShieldsUp: bool
+
+class ShipResponse(BaseModel):
+    """Response for current ship information."""
+    Ship: str
+    ShipName: Optional[str] = None
+    ShipIdent: Optional[str] = None
+    HullValue: Optional[int] = None
+    ModulesValue: Optional[int] = None
+    Rebuy: Optional[int] = None
+
+class LoadoutResponse(BaseModel):
+    ship: str
+    modules: List[Dict[str, Any]]
+    fuel_capacity: Optional[Dict[str, float]] = None
+    cargo_capacity: Optional[int] = None
+

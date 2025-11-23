@@ -4,7 +4,7 @@ import logging
 
 from models import (
     StatusResponse, BalanceResponse, FlagsResponse,
-    ScreenResponse, PipsResponse, FuelResponse
+    ScreenResponse, PipsResponse, FuelResponse, DetailedHealthResponse
 )
 from utils.file_utils import read_json_file
 from utils.journal import find_latest_event
@@ -138,4 +138,24 @@ async def get_fuel(request: Request):
         Capacity=fuel_capacity,
         Level=fuel_main,
         Percentage=fuel_percentage
+    )
+
+
+@router.get('/health-detailed', response_model=DetailedHealthResponse)
+async def get_detailed_health(request: Request):
+    """Get detailed health information including shields and hull."""
+    json_location = request.app.state.json_location
+    status_file = json_location / 'Status.json'
+
+    data = read_json_file(status_file)
+    if not data:
+        raise HTTPException(status_code=503, detail="Cannot read status file")
+
+    health = data.get('Health', 1.0)
+    shields = data.get('Shields', 0.0)
+
+    return DetailedHealthResponse(
+        Health=health,
+        Shields=shields,
+        ShieldsUp=data.get('ShieldsUp', False)
     )
