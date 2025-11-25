@@ -44,7 +44,7 @@ Will accept a single parameter specifying either raw or percent
 """
 
 SHIPS_CURRENT = """
-Get basic current ship infomration.
+Get basic current ship information.
 
 Returns, name, ship type, identifier, value, modules value, and rebuy cost
 """
