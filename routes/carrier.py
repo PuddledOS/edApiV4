@@ -6,7 +6,9 @@ from models import (
     CarrierStatsResponse,
     CarrierJumpRequestResponse,
     CarrierInfoResponse,
-    CarrierFuelResponse
+    CarrierFuelResponse,
+    CarrierBalanceResponse,
+    CarrierJumpRequestResponse, CarrierCapacityResponse
 )
 from utils.journal import get_latest_journal_file, parse_journal_line, find_latest_event
 
@@ -95,8 +97,8 @@ async def get_carrier_info(request: Request):
         raise HTTPException(status_code=500, detail=f"Error reading carrier data: {str(e)}")
 
 
-@router.get('/fuel')
-async def get_carrier_fuel(request: Request, response_model=CarrierFuelResponse):
+@router.get('/fuel', response_model=CarrierFuelResponse)
+async def get_carrier_fuel(request: Request ):
     """Get carrier fuel level and jump range."""
     json_location = request.app.state.json_location
 
@@ -105,14 +107,6 @@ async def get_carrier_fuel(request: Request, response_model=CarrierFuelResponse)
     if not carrier_stats:
         raise HTTPException(status_code=404, detail="No carrier statistics found")
 
-    #return {
-    #    "fuel_level": carrier_stats.get('FuelLevel', 0),
-    #    "fuel_percentage" : carrier_fuel_percentage,
-    #    "jump_range_current": carrier_stats.get('JumpRangeCurr', 0),
-    #    "jump_range_max": carrier_stats.get('JumpRangeMax', 0),
-    #    "carrier_id": carrier_stats.get('CarrierID'),
-    #    "callsign": carrier_stats.get('Callsign', 'Unknown')
-    #}
     return CarrierFuelResponse(
         fuel_level=carrier_stats.get('FuelLevel', 0),
         fuel_percentage=carrier_fuel_percentage,
@@ -122,8 +116,8 @@ async def get_carrier_fuel(request: Request, response_model=CarrierFuelResponse)
         callsign= carrier_stats.get('Callsign', 'Unknown')
     )
 
-@router.get('/balance')
-async def get_carrier_balance(request: Request):
+@router.get('/balance', response_model = CarrierBalanceResponse)
+async def get_carrier_balance(request: Request ):
     """Get carrier financial information."""
     json_location = request.app.state.json_location
 
@@ -134,17 +128,17 @@ async def get_carrier_balance(request: Request):
 
     finance = carrier_stats.get('Finance', {})
 
-    return {
-        "carrier_balance": finance.get('CarrierBalance', 0),
-        "reserve_balance": finance.get('ReserveBalance', 0),
-        "available_balance": finance.get('AvailableBalance', 0),
-        "reserve_percent": finance.get('ReservePercent', 0),
-        "carrier_name": carrier_stats.get('Name', 'Unknown'),
-        "callsign": carrier_stats.get('Callsign', 'Unknown')
-    }
+    return CarrierBalanceResponse(
+        carrier_balance= finance.get('CarrierBalance', 0),
+        reserve_balance= finance.get('ReserveBalance', 0),
+        available_balance= finance.get('AvailableBalance', 0),
+        reserve_percent= finance.get('ReservePercent', 0),
+        carrier_name= carrier_stats.get('Name', 'Unknown'),
+        callsign= carrier_stats.get('Callsign', 'Unknown')
+    )
 
 
-@router.get('/capacity')
+@router.get('/capacity', response_model=CarrierCapacityResponse)
 async def get_carrier_capacity(request: Request):
     """Get carrier space usage and capacity information."""
     json_location = request.app.state.json_location
@@ -161,17 +155,17 @@ async def get_carrier_capacity(request: Request):
     used = total - free
     usage_percent = (used / total * 100) if total > 0 else 0
 
-    return {
-        "total_capacity": total,
-        "used_space": used,
-        "free_space": free,
-        "usage_percent": round(usage_percent, 2),
-        "cargo": space_usage.get('Cargo', 0),
-        "ship_packs": space_usage.get('ShipPacks', 0),
-        "module_packs": space_usage.get('ModulePacks', 0),
-        "crew": space_usage.get('Crew', 0),
-        "cargo_reserved": space_usage.get('CargoSpaceReserved', 0)
-    }
+    return CarrierCapacityResponse(
+        total_capacity= total,
+        used_space= used,
+        free_space= free,
+        usage_percent= round(usage_percent, 2),
+        cargo= space_usage.get('Cargo', 0),
+        ship_packs= space_usage.get('ShipPacks', 0),
+        module_packs= space_usage.get('ModulePacks', 0),
+        crew= space_usage.get('Crew', 0),
+        cargo_reserved= space_usage.get('CargoSpaceReserved', 0)
+    )
 
 
 @router.get('/crew')

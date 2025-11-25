@@ -194,3 +194,24 @@ class CarrierFuelResponse(BaseModel):
     jump_range_max: int
     carrier_id: int
     callsign: str
+
+class CarrierBalanceResponse(BaseModel):
+    """Carrier balance information - GET /carrier/balance"""
+    carrier_balance: float
+    reserve_balance: float
+    available_balance: float
+    reserve_percent: float
+    carrier_name: str
+    callsign: str
+
+class CarrierCapacityResponse(BaseModel):
+    """Carrier capacity information - GET /carrier/capacity"""
+    total_capacity: int
+    used_space: int
+    free_space: int
+    usage_percent: float
+    cargo: int
+    ship_packs: int
+    module_packs: int
+    crew: int
+    cargo_reserved: float
