@@ -38,13 +38,6 @@ app = FastAPI(
     openapi_url="/openapi.json"
 )
 
-#@app.on_event("startup")
-#async def startup_event():
-#    """Initialize application on startup."""
-#    logger.info("Elite Dangerous API starting up...")
-#    logger.info(f"Using log location: {app.state.json_location}")
-
-
 @app.get("/")
 async def root():
     """Root endpoint."""
@@ -56,7 +49,7 @@ async def root():
     }
 
 
-@app.get("/health")
+@app.get("/api_health")
 async def health_check():
     """Health check endpoint."""
     return {"status": "healthy"}

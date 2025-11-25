@@ -5,6 +5,7 @@ import logging
 
 from models import EventResponse, MessageItem, PriceResponse
 from utils.journal import get_latest_journal_file, parse_journal_line
+import descriptions as desc
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/events", tags=["events"])
@@ -15,7 +16,7 @@ def get_json_location(request: Request) -> Path:
     return request.app.state.json_location
 
 
-@router.get('/messages', response_model=List[MessageItem])
+@router.get('/messages', response_model=List[MessageItem], description=desc.EVENTS_MESSAGES)
 async def get_messages(request: Request,
         count: int = Query(10, ge=1, le=100, description="Number of messages to retrieve"),
         channel: str = Query('npc', regex='^(npc|starsystem|squadron)$', description="Message channel")

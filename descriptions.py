@@ -185,7 +185,7 @@ Returns all commodities available at the current station with:
 CARGO_TRANSFER_HISTORY = """
 Calculate net carrier cargo inventory from transfer history.
 
-Scans all journal files to calculate current carrier cargo by 
+Scans **all** journal files to calculate current carrier cargo by 
 tracking all CargoTransfer events (to/from carrier).
 
 **Returns:** Dictionary with commodity names as keys and net quantities as values.

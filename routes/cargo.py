@@ -5,6 +5,7 @@ import logging
 
 from utils.file_utils import read_json_file
 from utils.journal import calculate_cargo_inventory
+import descriptions as desc
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/cargo", tags=["cargo"])
@@ -15,7 +16,7 @@ def get_json_location(request: Request) -> Path:
     return request.app.state.json_location
 
 
-@router.get('/inventory')
+@router.get('/inventory', description=desc.CARGO_INVENTORY)
 async def get_cargo(request: Request) -> List[Dict[str, Any]]:
     """Get current cargo inventory."""
     json_location = get_json_location(request)
@@ -41,7 +42,7 @@ async def get_market(request: Request) -> List[Dict[str, Any]]:
     return data.get('Items', [])
 
 
-@router.get('/transfer-history')
+@router.get('/transfer-history', description=desc.CARGO_TRANSFER_HISTORY)
 async def get_transfer_history(request: Request) -> Dict[str, int]:
     """
     Calculate current cargo inventory from all transfer history.
