@@ -4,19 +4,20 @@ import logging
 
 from models import (
     CarrierStatsResponse,
-    CarrierJumpRequestResponse,
     CarrierInfoResponse,
     CarrierFuelResponse,
     CarrierBalanceResponse,
-    CarrierJumpRequestResponse, CarrierCapacityResponse
+    CarrierJumpRequestResponse,
+    CarrierCapacityResponse
 )
 from utils.journal import get_latest_journal_file, parse_journal_line, find_latest_event
+import descriptions as desc
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/carrier", tags=["carrier"])
 
 
-@router.get('/stats', response_model=CarrierStatsResponse)
+@router.get('/stats', response_model=CarrierStatsResponse, description=desc.CARRIER_STATS)
 async def get_carrier_stats(request: Request):
     """Get current carrier statistics including fuel, capacity, crew, and finances."""
     json_location = request.app.state.json_location
@@ -33,7 +34,7 @@ async def get_carrier_stats(request: Request):
         raise HTTPException(status_code=500, detail=f"Error parsing carrier data: {str(e)}")
 
 
-@router.get('/jump-request', response_model=CarrierJumpRequestResponse)
+@router.get('/jump-request', response_model=CarrierJumpRequestResponse, description=desc.CARRIER_JUMP_REQUEST)
 async def get_carrier_jump_request(request: Request):
     """Get the most recent carrier jump request information."""
     json_location = request.app.state.json_location
@@ -50,7 +51,7 @@ async def get_carrier_jump_request(request: Request):
         raise HTTPException(status_code=500, detail=f"Error parsing jump request: {str(e)}")
 
 
-@router.get('/info', response_model=CarrierInfoResponse)
+@router.get('/info', response_model=CarrierInfoResponse, description=desc.CARRIER_INFO)
 async def get_carrier_info(request: Request):
     """Get combined carrier information including stats and jump request."""
     json_location = request.app.state.json_location
@@ -97,7 +98,7 @@ async def get_carrier_info(request: Request):
         raise HTTPException(status_code=500, detail=f"Error reading carrier data: {str(e)}")
 
 
-@router.get('/fuel', response_model=CarrierFuelResponse)
+@router.get('/fuel', response_model=CarrierFuelResponse, description=desc.CARRIER_FUEL)
 async def get_carrier_fuel(request: Request ):
     """Get carrier fuel level and jump range."""
     json_location = request.app.state.json_location
@@ -116,7 +117,7 @@ async def get_carrier_fuel(request: Request ):
         callsign= carrier_stats.get('Callsign', 'Unknown')
     )
 
-@router.get('/balance', response_model = CarrierBalanceResponse)
+@router.get('/balance', response_model = CarrierBalanceResponse, description=desc.CARRIER_BALANCE)
 async def get_carrier_balance(request: Request ):
     """Get carrier financial information."""
     json_location = request.app.state.json_location
@@ -138,7 +139,7 @@ async def get_carrier_balance(request: Request ):
     )
 
 
-@router.get('/capacity', response_model=CarrierCapacityResponse)
+@router.get('/capacity', response_model=CarrierCapacityResponse, description=desc.CARRIER_CAPACITY)
 async def get_carrier_capacity(request: Request):
     """Get carrier space usage and capacity information."""
     json_location = request.app.state.json_location
@@ -168,7 +169,7 @@ async def get_carrier_capacity(request: Request):
     )
 
 
-@router.get('/crew')
+@router.get('/crew', description=desc.CARRIER_CREW)
 async def get_carrier_crew(request: Request):
     """Get carrier crew members and their status."""
     json_location = request.app.state.json_location
@@ -192,7 +193,7 @@ async def get_carrier_crew(request: Request):
     }
 
 
-@router.get('/services')
+@router.get('/services', description=desc.CARRIER_SERVICES)
 async def get_carrier_services(request: Request):
     """Get available carrier services."""
     json_location = request.app.state.json_location

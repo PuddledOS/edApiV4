@@ -8,6 +8,7 @@ from models import (
 )
 from utils.file_utils import read_json_file
 from utils.journal import find_latest_event
+import descriptions as desc
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/status", tags=["status"])
@@ -33,12 +34,12 @@ async def get_active(request: Request):
 
     # Check if Flags2 exists (indicates game is running)
     is_running = 'Flags2' in data
-    value = 'running' if is_running else 'shutdown'
+    value = True if is_running else False
 
     return StatusResponse(Value=value)
 
 
-@router.get('/wealth', response_model=BalanceResponse)
+@router.get('/wealth', response_model=BalanceResponse, description=desc.STATUS_WEALTH)
 async def get_wealth(request: Request):
     """Get current balance/wealth."""
 
@@ -50,7 +51,7 @@ async def get_wealth(request: Request):
     return BalanceResponse(Balance=str(balance))
 
 
-@router.get('/flags', response_model=FlagsResponse)
+@router.get('/flags', response_model=FlagsResponse, description=desc.STATUS_FLAGS)
 async def get_flags(request: Request):
     """Get current status flags."""
     data = read_status_file(request)
@@ -79,7 +80,7 @@ async def get_screen(request: Request):
     return ScreenResponse(Focus=str(focus))
 
 
-@router.get('/pips', response_model=PipsResponse, description="Request parameters should be raw or percent.\nRaw will return a single digit number 0 - 8, percent will return a value between 0 - 100 dependant upon current setting ")
+@router.get('/pips', response_model=PipsResponse, description=desc.STATUS_PIPS)
 async def get_pips(request: Request, type: str = Query('percent', regex='^(percent|raw)$', description="Request either percentage value or raw value" ) ):
     """Get power distribution (pips) information."""
     data = read_status_file(request)

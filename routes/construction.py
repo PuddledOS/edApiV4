@@ -4,12 +4,13 @@ import traceback
 
 from models import ConstructionResponse
 from utils.journal import get_latest_journal_file, parse_journal_line
+import descriptions as desc
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/construction", tags=["construction"])
 
 
-@router.get('/current', response_model=ConstructionResponse)
+@router.get('/current', response_model=ConstructionResponse, description=desc.CONSTRUCTION_CURRENT)
 async def get_construction(request: Request):
     """Get current construction depot information."""
     try:
@@ -90,13 +91,3 @@ async def get_construction(request: Request):
         logger.error(f"Unexpected error in get_construction: {e}")
         logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
-
-
-@router.get('/test')
-async def test_construction(request: Request):
-    """Test endpoint to check if construction route is working."""
-    return {
-        "status": "ok",
-        "json_location": str(request.app.state.json_location),
-        "message": "Construction router is working"
-    }

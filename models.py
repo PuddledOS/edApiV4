@@ -4,7 +4,7 @@ from typing import Optional, List, Dict, Any
 
 class StatusResponse(BaseModel):
     """Response for active status check."""
-    Value: str
+    Value: bool
 
 
 class BalanceResponse(BaseModel):
@@ -215,3 +215,10 @@ class CarrierCapacityResponse(BaseModel):
     module_packs: int
     crew: int
     cargo_reserved: float
+
+class ShipLoadout(BaseModel):
+    """Ship load out."""
+    ship: str
+    modules: List[Any]
+    fuel_capacity: int
+    cargo_capacity: int
