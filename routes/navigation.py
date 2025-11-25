@@ -102,7 +102,7 @@ async def get_nearest_station(request: Request):
     if not data:
         raise HTTPException(status_code=503, detail="Cannot read status file")
 
-    # Add your logic here to find nearest station
+    # to be completed
     return {
         "message": "Nearest station endpoint",
         "docked": data.get('Docked', False)
