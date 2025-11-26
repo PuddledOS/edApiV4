@@ -2,7 +2,9 @@ from fastapi import APIRouter, HTTPException, Request, Query
 from typing import Optional, Dict, Any
 import logging
 
-from models import LocationResponse, JumpHistoryResponse
+from starlette.responses import HTMLResponse
+
+from models import LocationResponse, JumpHistoryResponse, NavRouteResponse
 from utils.file_utils import read_json_file
 from utils.journal import get_latest_journal_file, parse_journal_line
 
@@ -91,6 +93,23 @@ async def get_jump_history(
         logger.error(f"Error getting jump history: {e}")
         raise HTTPException(status_code=500, detail="Error reading journal file")
 
+@router.get('/nav-route', response_model=NavRouteResponse)
+async def get_nav_route(request: Request):
+    """Get nav route."""
+    json_location = request.app.state.json_location
+    navroute_file = json_location / 'NavRoute.json'
+
+    route_data = read_json_file(navroute_file)
+    if not route_data:
+        raise HTTPException(status_code=404, detail="Cannot read navroute file")
+
+    #route_data = data.get('Route', [])
+
+    return NavRouteResponse(
+        timestamp= route_data.get('timestamp'),
+        event= route_data.get('event'),
+        route= route_data.get('Route', [])
+    )
 
 @router.get('/nearest-station')
 async def get_nearest_station(request: Request):

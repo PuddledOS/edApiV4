@@ -104,6 +104,11 @@ class JumpHistoryResponse(BaseModel):
     jump_dist: Optional[float] = None
     fuel_used: Optional[float] = None
 
+class NavRouteResponse(BaseModel):
+    timestamp: str
+    event: str
+    route: list = []
+
 class DetailedHealthResponse(BaseModel):
     """Response for detailed health information."""
     Health: float
