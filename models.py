@@ -227,3 +227,8 @@ class ShipLoadout(BaseModel):
     modules: List[Any]
     fuel_capacity: int
     cargo_capacity: int
+
+class ShipModulesResponse(BaseModel):
+    timestamp: str
+    event: str
+    modules: list = []

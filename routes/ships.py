@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException, Request
 import logging
 
-from models import ShipResponse, LoadoutResponse
+from models import ShipResponse, LoadoutResponse, ShipModulesResponse
+from utils.file_utils import read_json_file
 from utils.journal import find_latest_event
 import descriptions as desc
 
@@ -44,4 +45,20 @@ async def get_loadout(request: Request):
         modules= loadout_event.get('Modules', []),
         fuel_capacity= loadout_event.get('FuelCapacity'),
         cargo_capacity= loadout_event.get('CargoCapacity')
+    )
+
+@router.get('/ship-modules', response_model=ShipModulesResponse, description=desc.SHIP_MODULES)
+async def get_ship_modules(request: Request):
+    """Get list of installed ship modules."""
+    json_location = request.app.state.json_location
+    modules_file = json_location / 'ModulesInfo.json'
+
+    modules_data = read_json_file(modules_file)
+    if not modules_data:
+        raise HTTPException(status_code=404, detail="Cannot read modules file")
+
+    return ShipModulesResponse(
+        timestamp= modules_data.get('timestamp'),
+        event= modules_data.get('event'),
+        modules= modules_data.get('Modules', [])
     )
