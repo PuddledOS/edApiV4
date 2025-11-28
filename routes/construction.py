@@ -2,9 +2,9 @@ from fastapi import APIRouter, HTTPException, Request
 import logging
 import traceback
 
-from models import ConstructionResponse
+from utils.models import ConstructionResponse
 from utils.journal import get_latest_journal_file, parse_journal_line
-import descriptions as desc
+import lang.descriptions_en as desc
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/construction", tags=["construction"])

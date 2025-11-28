@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException, Request, Query
-from typing import Optional, Dict, Any
+from typing import Dict, Any
 import logging
 
-from models import LocationResponse, JumpHistoryResponse, NavRouteResponse
+from utils.models import LocationResponse, NavRouteResponse
 from utils.file_utils import read_json_file
-import descriptions as desc
+import lang.descriptions_en as desc
 from utils.journal import get_latest_journal_file, parse_journal_line
 
 logger = logging.getLogger(__name__)

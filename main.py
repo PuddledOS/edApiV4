@@ -12,6 +12,7 @@ from pystray import Icon, Menu, MenuItem
 from PIL import Image
 from config import load_config, Config
 from routes import status, cargo, events, construction, control, export, navigation, ships, carrier
+#from utils import descriptions
 
 # Configure logging
 logging.basicConfig(
@@ -26,6 +27,8 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     logger.info("Elite Dangerous API starting up...")
     logger.info(f"Using log location: {app.state.json_location}")
+    logger.info(f"API Language: {app.state.config.language}")
+
     yield
 
 
@@ -44,6 +47,7 @@ async def root():
     return {
         "message": "Elite Dangerous API",
         "version": "2.0.0",
+        "language": app.state.config.language,
         "docs": "/docs",
         "status": "running"
     }
@@ -62,6 +66,9 @@ def setup_app(config: Config):
     app.state.config = config
     app.state.json_location = json_location
     app.state.server_running = False
+
+    ## Initialize descriptions with configured language
+    #descriptions.init_descriptions(config.language)
 
     # Setup CORS
     app.add_middleware(

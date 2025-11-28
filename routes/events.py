@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException, Query, Request
 from pathlib import Path
-from typing import List, Optional
+from typing import List
 import logging
 
-from models import EventResponse, MessageItem, PriceResponse
+from utils.models import EventResponse, MessageItem, PriceResponse
 from utils.journal import get_latest_journal_file, parse_journal_line
-import descriptions as desc
+import lang.descriptions_en as desc
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/events", tags=["events"])

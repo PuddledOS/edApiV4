@@ -22,6 +22,7 @@ class Config(BaseModel):
     output_directory: Path = Field(default_factory=lambda: Path.home() / "Desktop")
     allowed_origins: list[str] = ["*"]
     enable_keyboard_control: bool = True
+    language: str = "en"
 
     @validator('json_location', 'json_test_location', 'output_directory', pre=True)
     def convert_to_path(cls, v):
@@ -55,7 +56,8 @@ def create_default_config() -> None:
         "debug": False,
         "output_directory": str(Path.home() / "Desktop"),
         "allowed_origins": ["*"],
-        "enable_keyboard_control": True
+        "enable_keyboard_control": True,
+        "language" : "en"
     }
 
     with open(config_path, 'w') as file:

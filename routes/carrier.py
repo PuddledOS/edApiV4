@@ -1,8 +1,7 @@
 from fastapi import APIRouter, HTTPException, Request
-from typing import Optional
 import logging
 
-from models import (
+from utils.models import (
     CarrierStatsResponse,
     CarrierInfoResponse,
     CarrierFuelResponse,
@@ -11,7 +10,7 @@ from models import (
     CarrierCapacityResponse
 )
 from utils.journal import get_latest_journal_file, parse_journal_line, find_latest_event
-import descriptions as desc
+import lang.descriptions_en as desc
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/carrier", tags=["carrier"])

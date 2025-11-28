@@ -265,6 +265,8 @@ EXPORT_SELL_ORGANIC_HISTORY = """
 Export all organic data sales history to file.
 
 Scans all journal files and exports every SellOrganicData event.
+This process may take a while when running, depending upon how 
+many journal files are present.
 
 **Output:** JSON file with sale records including credits earned.
 

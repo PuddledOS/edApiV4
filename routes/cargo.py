@@ -1,11 +1,11 @@
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, HTTPException, Request
 from pathlib import Path
 from typing import List, Dict, Any
 import logging
 
 from utils.file_utils import read_json_file
 from utils.journal import calculate_cargo_inventory
-import descriptions as desc
+import lang.descriptions_en as desc
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/cargo", tags=["cargo"])
