@@ -4,7 +4,7 @@ import logging
 import uuid
 from typing import Dict, Any
 
-from utils.models import ExportTaskResponse, TaskStatusResponse
+from models.export_models import ExportTaskResponse, TaskStatusResponse
 from utils.journal import get_all_journal_files, parse_journal_line
 from utils.file_utils import write_json_file, ensure_directory
 

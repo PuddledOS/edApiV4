@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Request
 import logging
 import traceback
 
-from utils.models import ConstructionResponse
+from models.construction_models import ConstructionResponse
 from utils.journal import get_latest_journal_file, parse_journal_line
 import lang.descriptions_en as desc
 

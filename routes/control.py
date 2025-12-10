@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query, Request
 import logging
 
-from utils.models import KeySendResponse
+from models.control_models import KeySendResponse
 from pynput.keyboard import Controller, Key
 
 logger = logging.getLogger(__name__)

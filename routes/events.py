@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List
 import logging
 
-from utils.models import EventResponse, MessageItem, PriceResponse
+from models.events_models import EventResponse, MessageItem, PriceResponse
 from utils.journal import get_latest_journal_file, parse_journal_line
 import lang.descriptions_en as desc
 

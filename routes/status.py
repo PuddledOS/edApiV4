@@ -4,10 +4,9 @@ from fastapi import APIRouter, Query, HTTPException, Request
 from pathlib import Path
 import logging
 
-from utils.models import (
-    StatusResponse, BalanceResponse, FlagsResponse,
-    ScreenResponse, PipsResponse, FuelResponse, DetailedHealthResponse
-)
+from models.status_models import (StatusResponse, BalanceResponse, FlagsResponse,
+    ScreenResponse, PipsResponse, FuelResponse, DetailedHealthResponse)
+
 
 from utils.file_utils import read_json_file
 from utils.journal import find_latest_event

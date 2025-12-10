@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Request
 import logging
 
-from utils.models import ShipResponse, LoadoutResponse, ShipModulesResponse
+from models.ship_models import ShipResponse, LoadoutResponse, ShipModulesResponse
 from utils.file_utils import read_json_file
 from utils.journal import find_latest_event
 import lang.descriptions_en as desc

@@ -1,14 +1,17 @@
 from fastapi import APIRouter, HTTPException, Request
 import logging
 
-from utils.models import (
+from models.carrier_models import (
     CarrierStatsResponse,
     CarrierInfoResponse,
     CarrierFuelResponse,
     CarrierBalanceResponse,
     CarrierJumpRequestResponse,
-    CarrierCapacityResponse
+    CarrierCapacityResponse,
+    CarrierServicesResponse,
+    CarrierCrewResponse
 )
+
 from utils.journal import get_latest_journal_file, parse_journal_line, find_latest_event
 import lang.descriptions_en as desc
 
@@ -168,7 +171,7 @@ async def get_carrier_capacity(request: Request):
     )
 
 
-@router.get('/crew', description=desc.CARRIER_CREW)
+@router.get('/crew', response_model=CarrierCrewResponse, description=desc.CARRIER_CREW)
 async def get_carrier_crew(request: Request):
     """Get carrier crew members and their status."""
     json_location = request.app.state.json_location
@@ -183,16 +186,15 @@ async def get_carrier_crew(request: Request):
     active_crew = [member for member in crew if member.get('Activated', False)]
     inactive_crew = [member for member in crew if not member.get('Activated', False)]
 
-    return {
-        "total_crew_slots": len(crew),
-        "active_crew": len(active_crew),
-        "inactive_crew": len(inactive_crew),
-        "crew_details": crew,
-        "active_services": [member.get('CrewRole') for member in active_crew]
-    }
+    return CarrierCrewResponse(
+        total_crew_slots= len(crew),
+        active_crew= len(active_crew),
+        inactive_crew= len(inactive_crew),
+        crew_details= crew,
+        active_services= [member.get('CrewRole') for member in active_crew]
+    )
 
-
-@router.get('/services', description=desc.CARRIER_SERVICES)
+@router.get('/services', response_model=CarrierServicesResponse ,description=desc.CARRIER_SERVICES)
 async def get_carrier_services(request: Request):
     """Get available carrier services."""
     json_location = request.app.state.json_location
@@ -214,8 +216,8 @@ async def get_carrier_services(request: Request):
                 "crew_name": member.get('CrewName', 'Not assigned')
             }
 
-    return {
-        "carrier_name": carrier_stats.get('Name', 'Unknown'),
-        "callsign": carrier_stats.get('Callsign', 'Unknown'),
-        "services": services
-    }
+    return CarrierServicesResponse(
+        carrier_name= carrier_stats.get('Name', 'Unknown'),
+        callsign= carrier_stats.get('Callsign', 'Unknown'),
+        services= services
+    )
