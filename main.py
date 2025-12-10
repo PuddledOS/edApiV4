@@ -12,6 +12,7 @@ from pystray import Icon, Menu, MenuItem
 from PIL import Image
 from config import load_config, Config
 from routes import status, cargo, events, construction, control, export, navigation, ships, carrier
+from models.main_models import MainStatusResponse, MainRootResponse
 #from utils import descriptions
 
 # Configure logging
@@ -41,22 +42,24 @@ app = FastAPI(
     openapi_url="/openapi.json"
 )
 
-@app.get("/")
+@app.get("/", response_model=MainRootResponse)
 async def root():
     """Root endpoint."""
-    return {
-        "message": "Elite Dangerous API",
-        "version": "2.0.0",
-        "language": app.state.config.language,
-        "docs": "/docs",
-        "status": "running"
-    }
+    return MainRootResponse (
+        message= "Elite Dangerous API",
+        version= "2.0.0",
+        language= app.state.config.language,
+        docs= "/docs",
+        status= "running"
+    )
 
 
-@app.get("/api_health")
+@app.get("/api_health", response_model=MainStatusResponse)
 async def health_check():
     """Health check endpoint."""
-    return {"status": "healthy"}
+    return MainStatusResponse(
+        health= "healthy"
+    )
 
 
 def setup_app(config: Config):
