@@ -206,12 +206,13 @@ async def get_carrier_services(request: Request):
 
     services = {}
     for member in crew:
-        role = member.get('CrewRole', 'Unknown')
-        services[role] = {
-            "activated": member.get('Activated', False),
-            "enabled": member.get('Enabled', False),
-            "crew_name": member.get('CrewName', 'Not assigned')
-        }
+        if member.get('Activated'):
+            role = member.get('CrewRole', 'Unknown')
+            services[role] = {
+                "activated": member.get('Activated', False),
+                "enabled": member.get('Enabled', False),
+                "crew_name": member.get('CrewName', 'Not assigned')
+            }
 
     return {
         "carrier_name": carrier_stats.get('Name', 'Unknown'),

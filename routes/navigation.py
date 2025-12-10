@@ -92,6 +92,47 @@ async def get_jump_history(
         logger.error(f"Error getting jump history: {e}")
         raise HTTPException(status_code=500, detail="Error reading journal file")
 
+@router.get('/start-jump')
+async def get_start_jump(
+        request: Request,
+        limit: int = Query(10, ge=1, le=100, description="Number of jumps to retrieve")
+) -> list[Dict[str, Any]]:
+    """Get currently requested jump."""
+    json_location = request.app.state.json_location
+    journal_file = get_latest_journal_file(json_location)
+
+    if not journal_file:
+        raise HTTPException(status_code=404, detail="No journal file found")
+
+    jumps = []
+
+    try:
+        with open(journal_file, 'r', encoding='utf-8') as f:
+            for line in reversed(list(f)):
+                if len(jumps) >= limit:
+                    break
+
+                data = parse_journal_line(line)
+                if not data:
+                    continue
+
+                if data.get('event') == 'StartJump' and not data.get('JumpType') == 'Supercruise':
+                    scoopable = fuel_stars(data.get('StarClass'))
+                    jumps.append({
+                        'jump-type': data.get('JumpType'),
+                        'system': data.get('StarSystem'),
+                        'address': data.get('SystemAddress'),
+                        'timestamp': data.get('timestamp'),
+                        'star_type': data.get('StarClass'),
+                        'fuel_star': scoopable
+                    })
+
+        return jumps
+
+    except Exception as e:
+        logger.error(f"Error getting jump history: {e}")
+        raise HTTPException(status_code=500, detail="Error reading journal file")
+
 @router.get('/nav-route', response_model=NavRouteResponse, description=desc.NAVIGATION_ROUTE)
 async def get_nav_route(request: Request):
     """Get nav route."""
@@ -123,3 +164,13 @@ async def get_nearest_station(request: Request):
         "message": "Nearest station endpoint",
         "docked": data.get('Docked', False)
     }
+
+def fuel_stars(check_star):
+    """Return a list of scoopable fuels stars."""
+    scoopable = {'A', 'B', 'F', 'G', 'K', 'M', 'O' }
+    if check_star in scoopable:
+        return True
+    else:
+        return False
+
+

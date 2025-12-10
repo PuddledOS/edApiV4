@@ -21,7 +21,7 @@ async def get_current_ship(request: Request):
         raise HTTPException(status_code=404, detail="No ship loadout found")
 
     return ShipResponse(
-        Ship=loadout_event.get('Ship'),
+        Ship=decode_ship_name(loadout_event.get('Ship')),
         ShipName=loadout_event.get('ShipName'),
         ShipIdent=loadout_event.get('ShipIdent'),
         HullValue=loadout_event.get('HullValue'),
@@ -41,7 +41,7 @@ async def get_loadout(request: Request):
         raise HTTPException(status_code=404, detail="No ship loadout found")
 
     return LoadoutResponse(
-        ship= loadout_event.get('Ship'),
+        ship= decode_ship_name(loadout_event.get('Ship')),
         modules= loadout_event.get('Modules', []),
         fuel_capacity= loadout_event.get('FuelCapacity'),
         cargo_capacity= loadout_event.get('CargoCapacity')
@@ -62,3 +62,18 @@ async def get_ship_modules(request: Request):
         event= modules_data.get('event'),
         modules= modules_data.get('Modules', [])
     )
+
+def decode_ship_name(ship_name):
+    if (ship_name is None) or (ship_name == ""):
+        raise HTTPException(status_code=404, detail="No Ship name preented")
+
+    # define the alternative ship names
+    alt_ship_name = {'explorer_nx' : 'Caspian Explorer', 'asp': 'Asp Explorer',
+                     'dolphin': 'Dolphin', 'cobramkiii': 'Cobra Mk 3',
+                     'panthermkii': 'Panther Mk 2', 'lakonminer': 'Type 11 Prospector',
+                     'type9_military': 'Type 10 Defender'}
+
+    if ship_name in alt_ship_name.keys():
+        return alt_ship_name[ship_name]
+    else:
+        return ship_name
