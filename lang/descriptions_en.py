@@ -519,3 +519,163 @@ Returns comprehensive breakdown including:
 - Overall progression percentage
 - Engineers in progress vs completed
 """
+
+
+# Exploration Endpoints
+EXPLORATION_CURRENT_SYSTEM = """
+Get summary of bodies scanned in the current system.
+
+Returns comprehensive information including:
+- Total bodies in system (from FSS scan)
+- Number of bodies you've scanned
+- First discoveries, mapping, and footfall counts
+- Star and planet counts
+- Landable and terraformable body counts
+- Breakdown of planet and star types
+
+**Use this to:** Track exploration progress in your current system.
+"""
+
+EXPLORATION_SCANNED_BODIES = """
+Get detailed information about all bodies scanned in the current system.
+
+Returns list of all scanned bodies with:
+- Discovery status (first discovered/mapped/footfall)
+- Body type and classification
+- Physical properties (mass, temperature, atmosphere)
+- Distance from arrival point
+- Landability and terraformability
+
+**Use this to:** Review what you've scanned and plan further exploration.
+"""
+
+EXPLORATION_FIRST_DISCOVERIES = """
+Get all first discoveries in the current system.
+
+Returns only bodies where you were the first to:
+- Discover (first to scan)
+- Map (first to surface scan)
+- Footfall (first to land on)
+
+**Use this to:** Track your exploration achievements and valuable finds.
+"""
+
+EXPLORATION_STATISTICS = """
+Get overall exploration statistics from your journals.
+
+**Parameters:**
+- `scan_all_logs=false` (default): Only current journal
+- `scan_all_logs=true`: All historical journals (slower)
+
+Returns:
+- Total systems visited
+- Total bodies scanned
+- First discovery/mapping/footfall counts
+- Most common planet and star types
+- Landable and terraformable body counts
+
+**Note:** Scanning all logs may take 30+ seconds for extensive exploration history.
+"""
+
+EXPLORATION_SEARCH_SYSTEM = """
+Search all journal files for a specific system's exploration data.
+
+Scans through historical journals to find the most recent visit to the specified system.
+
+Returns complete scan summary including:
+- All discoveries made
+- Planet type breakdown
+- Valuable finds
+
+**Use this to:** Review past exploration of specific systems.
+"""
+
+EXPLORATION_PLANET_TYPES = """
+Get distribution of all planet types you've encountered.
+
+Returns count of each planet class:
+- Icy bodies
+- Rocky bodies
+- High metal content
+- Gas giants
+- Earth-likes, water worlds, etc.
+
+**Parameters:**
+- `scan_all_logs`: Include all historical data
+
+**Use this to:** Understand your exploration patterns and focus areas.
+"""
+
+EXPLORATION_VALUABLE_FINDS = """
+Get high-value exploration finds from your history.
+
+Returns categorized valuable bodies:
+- **Earth-like worlds**: Highest value
+- **Water worlds**: High value
+- **Ammonia worlds**: High value
+- **Terraformable**: Candidate planets
+- **First discoveries**: Your unique finds
+
+**Parameters:**
+- `scan_all_logs`: Include all historical journals
+
+**Use this to:** Track your most valuable exploration achievements.
+"""
+
+# Add to descriptions_en.py
+
+EXPLORATION_FIRST_DISCOVERY_REPORT = """
+Generate comprehensive first discovery report.
+
+Creates detailed report of ALL systems where you made first discoveries including:
+- **Complete system breakdown** with all stars, planets, and moons
+- **Star classifications** (type, class, mass, luminosity, age)
+- **Planet details** (class, atmosphere, volcanism, gravity, temperature)
+- **Discovery status** for each body (discovered/mapped/footfall)
+- **Material composition** for landable bodies
+- **Geological/biological signals**
+- **High-value finds** (Earth-likes, water worlds, ammonia worlds)
+- **Terraformable candidates**
+
+**Parameters:**
+- `scan_all_logs=true` (default): Scan entire exploration history
+- `scan_all_logs=false`: Current session only
+- `include_already_discovered=false` (default): Only systems with first discoveries
+- `include_already_discovered=true`: Include all scanned systems
+
+**Output:** Complete JSON report with full system details
+
+**Performance:**
+- Small history (< 100 systems): ~5-10 seconds
+- Medium history (100-500 systems): ~15-30 seconds
+- Large history (500+ systems): ~30-60 seconds
+
+**Use this to:**
+- Generate complete exploration records
+- Submit EDSM data
+- Track valuable discoveries
+- Create personal exploration database
+- Share discoveries with squadron
+"""
+
+EXPLORATION_FIRST_DISCOVERY_SYSTEMS = """
+Get simplified list of systems with first discoveries.
+
+Faster alternative to full report - returns basic summary for each system:
+- System name and address
+- Visit timestamp
+- Count of first discoveries/mapped/footfall
+- Bodies scanned
+- Valuable finds present
+
+**Parameters:**
+- `scan_all_logs`: Include all history
+- `min_discoveries`: Minimum first discoveries to include (default: 1)
+
+**Performance:** 5-10x faster than full report
+
+**Use this to:**
+- Quick overview of exploration achievements
+- Find systems worth revisiting
+- Identify most profitable discoveries
+"""

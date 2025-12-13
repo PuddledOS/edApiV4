@@ -1,8 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict, Any
 
-
-
 class CarrierCrewMember(BaseModel):
     """Individual crew member on carrier."""
     CrewRole: str                    # e.g., "Captain", "Refuel", "Commodities"
