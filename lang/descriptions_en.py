@@ -293,3 +293,229 @@ SHIP_MODULES = """
 NAVIGATION_ROUTE = """
 
 """
+
+
+# Materials Endpoints
+MATERIALS_INVENTORY = """
+Get complete engineering materials inventory.
+
+Returns all raw, manufactured, and encoded materials with their current counts.
+
+**Categories:**
+- **Raw Materials**: Collected from surface/space mining, meteorites, and missions (max 300 each)
+- **Manufactured Materials**: Obtained from ships, installations, and missions (max 250 each)
+- **Encoded Materials**: Scanned from ships, wakes, and data points (max 300 each)
+
+**Note:** Materials data updates when you collect, use, or trade materials.
+"""
+
+MATERIALS_SUMMARY = """
+Get summary statistics for all material categories.
+
+Returns aggregate information including:
+- Total types and counts per category
+- Capacity usage percentages
+- Number of materials at or near capacity
+
+**Use this to:** Quickly assess your material storage situation.
+"""
+
+MATERIALS_RAW = """
+Get only raw materials inventory.
+
+Returns all raw materials (elements) collected from mining and surface prospecting.
+
+**Common raw materials:** Iron, Nickel, Carbon, Sulphur, Phosphorus, etc.
+"""
+
+MATERIALS_MANUFACTURED = """
+Get only manufactured materials inventory.
+
+Returns all manufactured materials obtained from ships, installations, and missions.
+
+**Examples:** Shield Emitters, Heat Exchangers, Chemical Processors, etc.
+"""
+
+MATERIALS_ENCODED = """
+Get only encoded materials inventory.
+
+Returns all encoded data materials scanned from ships, wakes, and data points.
+
+**Examples:** Emission Data, Wake Echoes, Shield Analysis, Encryption Archives, etc.
+"""
+
+MATERIALS_SEARCH = """
+Search for a specific material by name.
+
+Searches across all categories and returns detailed information including:
+- Material category (raw/manufactured/encoded)
+- Current count
+- Maximum capacity
+- Usage percentage
+- Whether at maximum capacity
+
+**Search tips:** 
+- Case-insensitive
+- Searches both internal name and localized name
+- Partial matches supported
+"""
+
+MATERIALS_AT_CAPACITY = """
+Get all materials that are at maximum capacity.
+
+Returns materials at their storage limit:
+- Raw: 300
+- Manufactured: 250  
+- Encoded: 300
+
+**Use this to:** Identify materials to trade or avoid collecting.
+"""
+
+MATERIALS_LOW_STOCK = """
+Get materials below a specified count threshold.
+
+Returns all materials with counts below your specified threshold.
+
+**Use this to:** 
+- Plan material gathering sessions
+- Identify materials needed for engineering
+- Prepare for expeditions
+
+**Default threshold:** 10 units
+"""
+
+MATERIALS_BY_GRADE = """
+Get materials filtered by grade/rarity (1-5).
+
+**Grades:**
+- Grade 1: Common (Basic, Standard, Worn)
+- Grade 2: Standard (Modified, Flawed, Salvaged)
+- Grade 3: Rare (Refined, Anomalous, Unusual)
+- Grade 4: Very Rare (Conductive, Exquisite, Classified)
+- Grade 5: Legendary (Biotech, Exceptional, Proprietary)
+
+**Note:** Grade detection is simplified. Raw materials don't have traditional grades.
+"""
+
+# Engineers Endpoints
+ENGINEERS_PROGRESS = """
+Get complete engineer progress information.
+
+Returns all engineers with their current status:
+- **Known**: Engineer discovered but requirements not met
+- **Invited**: Requirements met, can now unlock
+- **Unlocked**: Engineer unlocked and available
+- **Barred**: No longer available (rare)
+
+For unlocked engineers, also shows:
+- Current rank (1-5, Grade 1-5 access)
+- Progress to next rank (0-100%)
+
+**Note:** Data updates when you unlock engineers or complete crafts.
+"""
+
+ENGINEERS_SUMMARY = """
+Get summary statistics for all engineers.
+
+Returns aggregate information including:
+- Total number of engineers
+- Count by status (known/invited/unlocked/barred)
+- Number at maximum rank (5)
+- Average rank of unlocked engineers
+
+**Use this to:** Quick overview of your engineering progression.
+"""
+
+ENGINEERS_UNLOCKED = """
+Get all engineers that have been unlocked.
+
+Returns only engineers you can currently visit and use for modifications.
+
+**Use this to:** See which engineers are available for crafting.
+"""
+
+ENGINEERS_INVITED = """
+Get all engineers that have sent invitations.
+
+Returns engineers whose requirements you've met and are ready to unlock.
+
+**Next step:** Visit these engineers to unlock them and start crafting.
+"""
+
+ENGINEERS_KNOWN = """
+Get all engineers that are known but not yet unlocked.
+
+Returns engineers you've discovered but haven't met requirements for yet.
+
+**Use this to:** Plan which engineers to unlock next.
+"""
+
+ENGINEERS_MAX_RANK = """
+Get all engineers at maximum rank (Grade 5).
+
+Returns engineers who have reached the highest access level.
+
+**At Grade 5:**
+- Access to all blueprint modifications
+- Maximum experimental effects available
+- No further rank progression needed
+
+**Use this to:** See your fully progressed engineers.
+"""
+
+ENGINEERS_SEARCH = """
+Search for a specific engineer by name.
+
+Returns detailed information including:
+- Current unlock status
+- Rank and progress (if unlocked)
+- Next rank information
+- Whether at maximum rank
+
+**Search tips:**
+- Case-insensitive
+- Partial matches supported
+- Example: "farseer", "dweller", "martuuk"
+"""
+
+ENGINEERS_BY_RANK = """
+Get all engineers at a specific rank (1-5).
+
+Returns unlocked engineers at the specified grade level.
+
+**Ranks:**
+- Rank 1: Basic modifications
+- Rank 2: Improved modifications
+- Rank 3: Advanced modifications
+- Rank 4: High-end modifications
+- Rank 5: Maximum modifications + all experimentals
+
+**Use this to:** See progression at each grade level.
+"""
+
+ENGINEERS_IN_PROGRESS = """
+Get engineers currently being ranked up.
+
+Returns unlocked engineers below rank 5, sorted by progress.
+
+**Use this to:**
+- See which engineers are closest to next rank
+- Plan crafting to progress specific engineers
+- Track overall engineering progression
+"""
+
+ENGINEERS_STATISTICS = """
+Get detailed statistics about engineer progress.
+
+Returns comprehensive breakdown including:
+- Status distribution
+- Rank distribution
+- Completion percentages
+- Overall progress metrics
+
+**Includes:**
+- Total and percentage unlocked
+- Rank 5 completion rate
+- Overall progression percentage
+- Engineers in progress vs completed
+"""
