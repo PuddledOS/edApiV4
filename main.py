@@ -12,7 +12,7 @@ from pystray import Icon, Menu, MenuItem
 from PIL import Image
 from config import load_config, Config
 from routes import status, cargo, events, construction, control, export, navigation, ships, carrier, materials, \
-    engineers, systems, organics
+    engineers, systems, organics, commander
 from models.main_models import MainStatusResponse, MainRootResponse
 #from utils import descriptions
 
@@ -97,6 +97,7 @@ def setup_app(config: Config):
     app.include_router(engineers.router)
     app.include_router(systems.router)
     app.include_router(organics.router)
+    app.include_router(commander.router)
 
     logger.info("Application setup complete")
 
