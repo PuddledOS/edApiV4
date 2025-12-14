@@ -12,6 +12,7 @@ A FastAPI-based background service for accessing Elite Dangerous game data throu
 - Exploration Data including first discoveries
 - Ship Loadouts and specs
 - Inventory of materials
+- Track Engineers status
 - Construction site monitoring
 - Keyboard control (optional)
 - Historical data export
