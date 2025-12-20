@@ -173,7 +173,7 @@ def on_show_status(icon, item):
         )
         messagebox.showinfo("ED API Server Status", status_msg)
     else:
-        messagebox.showwarning("ED API Server Status", "Server is not running ✗")
+        messagebox.showwarning("ED API Server Status", "Server is not running")
 
     root.destroy()
 

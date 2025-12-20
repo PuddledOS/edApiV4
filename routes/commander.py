@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from fastapi import APIRouter, HTTPException, Query, Request
 from typing import List, Dict, Optional, Any
 import logging
@@ -9,8 +11,9 @@ from models.commander_models import (
     CommanderStatus,
     RankHistory,
     ProgressHistory,
-    ReputationHistory
+    ReputationHistory, BackPackResponse
 )
+from utils.file_utils import read_json_file
 from utils.journal import (
     get_latest_journal_file,
     get_all_journal_files,
@@ -544,3 +547,34 @@ async def get_rank_names(request: Request) -> Dict[str, Any]:
     except Exception as e:
         logger.error(f"Error getting rank names: {e}")
         raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+
+def get_json_location(request: Request) -> Path:
+    """Get JSON location from app state."""
+    return request.app.state.json_location
+
+def read_backpack_file(request: Request, file_to_read):
+    json_location = get_json_location(request)
+    status_file = json_location / file_to_read
+    data = read_json_file(status_file)
+    return data
+
+@router.get(
+    '/backpack',
+    summary="List Backpack Contents",
+    description="Get human-readable rank names for current backpack contents",
+    response_model=BackPackResponse,
+)
+async def get_backpack_contents(request: Request):
+    bpdata = read_backpack_file(request, 'Backpack.json')
+    if not bpdata:
+        raise HTTPException(status_code=503, detail="Cannot read status file")
+
+    return BackPackResponse(
+        timestamp=bpdata.get('timestamp'),
+        event=bpdata.get('event'),
+        items=bpdata.get('Items'),
+        components=bpdata.get('Components'),
+        consumables=bpdata.get('Consumables'),
+        data=bpdata.get('Data')
+    )

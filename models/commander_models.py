@@ -1,3 +1,4 @@
+from fastapi.openapi.models import Components
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
@@ -70,3 +71,13 @@ class ReputationHistory(BaseModel):
     latest_timestamp: Optional[str] = None
     current_reputation: Optional[CommanderReputation] = None
     history: List[CommanderReputation] = Field(default_factory=list)
+
+class BackPackResponse(BaseModel):
+    """Back pack response"""
+    timestamp: Optional[str] = None
+    event: str
+    items: List = []
+    components: List = []
+    consumables: List = []
+    data: List = []
+
