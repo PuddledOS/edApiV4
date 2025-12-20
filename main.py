@@ -3,18 +3,17 @@ import time
 import logging
 import threading
 from contextlib import asynccontextmanager
+from pathlib import Path
+from importlib import import_module
 import uvicorn
 import tkinter as tk
 from tkinter import messagebox
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from pystray import Icon, Menu, MenuItem
 from PIL import Image
 from config import load_config, Config
-from routes import status, cargo, events, construction, control, export, navigation, ships, carrier, materials, \
-    engineers, systems, organics, commander
 from models.main_models import MainStatusResponse, MainRootResponse
-#from utils import descriptions
 
 # Configure logging
 logging.basicConfig(
@@ -23,6 +22,41 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
+def load_routes():
+    """Dynamically load all route modules from the routes directory."""
+    routes_dir = Path(__file__).parent / "routes"
+    routers = []
+
+    if not routes_dir.exists():
+        logger.warning(f"Routes directory not found: {routes_dir}")
+        return routers
+
+    # Get all Python files in routes directory
+    route_files = sorted(routes_dir.glob("*.py"))
+
+    for route_file in route_files:
+        # Skip __init__.py and private modules
+        if route_file.name.startswith("_"):
+            continue
+
+        module_name = route_file.stem
+
+        try:
+            # Import the module
+            module = import_module(f"routes.{module_name}")
+
+            # Check if module has a 'router' attribute
+            if hasattr(module, "router") and isinstance(module.router, APIRouter):
+                routers.append((module_name, module.router))
+                logger.info(f"Loaded route module: {module_name}")
+            else:
+                logger.debug(f"Skipping {module_name}: no router found")
+
+        except Exception as e:
+            logger.error(f"Failed to load route module {module_name}: {e}")
+
+    return routers
 
 
 @asynccontextmanager
@@ -43,15 +77,16 @@ app = FastAPI(
     openapi_url="/openapi.json"
 )
 
+
 @app.get("/", response_model=MainRootResponse)
 async def root():
     """Root endpoint."""
-    return MainRootResponse (
-        message= "Elite Dangerous API",
-        version= "2.0.0",
-        language= app.state.config.language,
-        docs= "/docs",
-        status= "running"
+    return MainRootResponse(
+        message="Elite Dangerous API",
+        version="2.0.0",
+        language=app.state.config.language,
+        docs="/docs",
+        status="running"
     )
 
 
@@ -59,7 +94,7 @@ async def root():
 async def health_check():
     """Health check endpoint."""
     return MainStatusResponse(
-        health= "healthy"
+        health="healthy"
     )
 
 
@@ -71,9 +106,6 @@ def setup_app(config: Config):
     app.state.json_location = json_location
     app.state.server_running = False
 
-    ## Initialize descriptions with configured language
-    #descriptions.init_descriptions(config.language)
-
     # Setup CORS
     app.add_middleware(
         CORSMiddleware,
@@ -83,23 +115,13 @@ def setup_app(config: Config):
         allow_credentials=True,
     )
 
-    # Include routers
-    app.include_router(status.router)
-    app.include_router(cargo.router)
-    app.include_router(events.router)
-    app.include_router(construction.router)
-    app.include_router(control.router)
-    app.include_router(export.router)
-    app.include_router(navigation.router)
-    app.include_router(ships.router)
-    app.include_router(carrier.router)
-    app.include_router(materials.router)
-    app.include_router(engineers.router)
-    app.include_router(systems.router)
-    app.include_router(organics.router)
-    app.include_router(commander.router)
+    # Dynamically load and include all routers
+    routers = load_routes()
+    for module_name, router in routers:
+        app.include_router(router)
+        logger.info(f"Registered router: {module_name}")
 
-    logger.info("Application setup complete")
+    logger.info(f"Application setup complete with {len(routers)} route modules")
 
 
 def run_server(config: Config):
@@ -127,7 +149,7 @@ def create_tray_image():
         return image
 
 
-def on_open_browser( icon, item):
+def on_open_browser(icon, item):
     """Open browser to API docs."""
     port = app.state.config.port
     import webbrowser
