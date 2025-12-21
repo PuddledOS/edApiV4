@@ -562,10 +562,10 @@ def read_backpack_file(request: Request, file_to_read):
 @router.get(
     '/backpack',
     summary="List Backpack Contents",
-    description="Get human-readable rank names for current backpack contents",
+    description="Get commanders current backpack contents",
     response_model=BackPackResponse,
 )
-async def get_backpack_contents(request: Request):
+async def get_backpack_contents(request: Request) -> BackPackResponse:
     bpdata = read_backpack_file(request, 'Backpack.json')
     if not bpdata:
         raise HTTPException(status_code=503, detail="Cannot read status file")
